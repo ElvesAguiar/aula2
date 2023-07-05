@@ -1,14 +1,12 @@
 package com.aula2.usuario.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 public class Usuario {
     @Id
@@ -18,6 +16,12 @@ public class Usuario {
     private String email;
     private String senha;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_funcao",
+            joinColumns = @JoinColumn(name="usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "funcao_id")
+    )
    private Set<Funcao> funcoes = new HashSet<>();
 
     public Usuario(){
@@ -61,4 +65,10 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public Set<Funcao> getFuncoes() {
+        return funcoes;
+    }
+
+
 }
